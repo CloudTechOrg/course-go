@@ -5,34 +5,72 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"time"
 )
 
-// JSONで受け取るデータを構造体として定義
+// リクエストデータの構造体を定義
 type RequestData struct {
-	Name string `json:"name"`
-	Age  int    `json:"age"`
+	Name     string `json:"name"`
+	Birthday string `json:"birthday"`
 }
 
-func handler(w http.ResponseWriter, r *http.Request) {
+// レスポンスデータの構造体を定義
+type ResponseData struct {
+	Name     string `json:"name"`
+	Birthday string `json:"birthday"`
+	Age      int    `json:"age"`
+}
 
-	// リクエストボディを読み取る
-	body, err := io.ReadAll(r.Body)
+// 年齢を計算する関数
+func calculateAge(birthday string) (int, error) {
+	layout := "2006-01-02"
+	birthDate, err := time.Parse(layout, birthday)
 	if err != nil {
-		http.Error(w, "bodyの読み取りに失敗しました", http.StatusBadRequest)
+		return 0, err
+	}
+	today := time.Now()
+	age := today.Year() - birthDate.Year()
+	if today.YearDay() < birthDate.YearDay() {
+		age--
+	}
+	return age, nil
+}
+
+func handler(response http.ResponseWriter, request *http.Request) {
+	// リクエストボディを読み取る
+	request_json, err := io.ReadAll(request.Body)
+	if err != nil {
+		http.Error(response, "bodyの読み取りに失敗しました", http.StatusInternalServerError)
 		return
 	}
 
 	// JSONデータを構造体にデコードする
-	var data RequestData
-	err = json.Unmarshal(body, &data)
+	var request_data RequestData
+	err = json.Unmarshal(request_json, &request_data)
 	if err != nil {
-		// JSONのデコードに失敗した場合はエラーとする
-		http.Error(w, "JSONのデコードに失敗しました", http.StatusBadRequest)
+		http.Error(response, "JSONの形式が誤っています", http.StatusBadRequest)
 		return
 	}
 
-	// データの使用例
-	fmt.Fprintf(w, "あなたが入力したデータは、名前: %s, 年齢: %d です。", data.Name, data.Age)
+	// 年齢を計算する
+	age, err := calculateAge(request_data.Birthday)
+	if err != nil {
+		http.Error(response, "生年月日の形式が正しくありません。", http.StatusBadRequest)
+		return
+	}
+
+	// レスポンスデータを作成
+	response_data := ResponseData{
+		Name:     request_data.Name,
+		Birthday: request_data.Birthday,
+		Age:      age,
+	}
+
+	// Content-Typeヘッダーにapplication/jsonを設定する
+	response.Header().Set("Content-Type", "application/json")
+
+	// 構造体をJSON形式に変換し、レスポンスのbodyに設定
+	json.NewEncoder(response).Encode(response_data)
 }
 
 func main() {
