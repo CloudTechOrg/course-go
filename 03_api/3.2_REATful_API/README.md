@@ -28,7 +28,7 @@ CREATE TABLE cloudtech_forum.posts (
 ```
 
 ## 環境変数ファイルの更新
-1. `03_api/3.2_REATful_API/cloudtech_forum/.env`ファイルを開く
+1. `03_api/3.2_REATful_API/01_Create/cloudtech_forum/.env`ファイルを開く
 
 2. 下記の環境変数において、DB_PASSWORDをご自身のものに合わせて更新する
 
@@ -45,7 +45,7 @@ DB_NAME=cloudtech_forum
 
 1. 下記のコマンドでフォルダーの移動を行う
 ```sh
-cd 03_api/3.2_REATful_API/cloudtech_forum 
+cd 03_api/3.2_REATful_API/01_Create/cloudtech_forum
 ```
 
 2. Goのアプリケーションを実行し、HTTPサーバを起動する
