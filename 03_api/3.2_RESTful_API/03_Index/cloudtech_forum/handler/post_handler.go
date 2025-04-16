@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"cloudtech_forum/model"
@@ -35,4 +36,21 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	// レスポンスを返却
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(response)
+}
+
+// Indexハンドラ関数
+func Index(w http.ResponseWriter, r *http.Request) {
+	// 検索処理の実行
+	posts, err := repository.SearchPostAll()
+	if err != nil {
+		log.SetFlags(log.LstdFlags | log.Lshortfile)
+		log.Printf("Error: %v", err)
+		return
+	}
+
+	// ステータスコードに「200：OK」を設定
+	w.WriteHeader(http.StatusOK)
+
+	// postsデータのスライスをレスポンスとして設定
+	json.NewEncoder(w).Encode(posts)
 }
