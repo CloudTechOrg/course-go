@@ -9,7 +9,7 @@
 
 1. 下記のコマンドでフォルダーの移動を行う
 ```sh
-cd 03_api/3.2_RESTful_API/04_Show/cloudtech_forum
+cd 03_api/3.2_RESTful_API/05_Update/cloudtech_forum
 ```
 
 2. Goのアプリケーションを実行し、HTTPサーバを起動する

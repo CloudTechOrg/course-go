@@ -114,3 +114,32 @@ func Update(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(response)
 }
+
+// Deleteハンドラ関数
+func Delete(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id, _ := strconv.Atoi(vars["id"])
+
+	// 削除処理の実行
+	delete_count, err := repository.DeletePost(id)
+	if err != nil {
+		http.Error(w, "削除処理に失敗しました", http.StatusInternalServerError)
+		return
+	}
+
+	// 削除件数が0件の場合、404エラーを返す
+	if delete_count == 0 {
+		http.Error(w, "削除対象のリソースが見つかりません", http.StatusNotFound)
+		return
+	}
+
+	// レスポンスのBodyに削除件数をセット
+	response := map[string]interface{}{
+		"message":      "削除が成功しました",
+		"deletedCount": int(delete_count),
+	}
+
+	// ステータスコード200を返す
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(response)
+}

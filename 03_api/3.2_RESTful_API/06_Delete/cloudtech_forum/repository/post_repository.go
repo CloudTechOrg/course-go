@@ -115,3 +115,28 @@ func UpdatePost(id int, content string, createdUserID int) (int64, error) {
 	// 影響を受けた行数を返す
 	return rowsAffected, nil
 }
+
+// 投稿の削除
+func DeletePost(id int) (int64, error) {
+	// SQLを定義
+	query := "DELETE FROM posts WHERE id = ?"
+
+	// DELETEのSQLを実行
+	result, err := db.Exec(query, id)
+	if err != nil {
+		// エラーログの出力
+		log.Printf("投稿の削除に失敗しました: %v", err)
+		return 0, fmt.Errorf("投稿の削除に失敗しました: %w", err)
+	}
+
+	// 影響を受けた行数を取得
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		// エラーログの出力
+		log.Printf("影響を受けた行数の取得に失敗しました: %v", err)
+		return 0, fmt.Errorf("影響を受けた行数の取得に失敗しました: %w", err)
+	}
+
+	// 影響を受けた行数を返す
+	return rowsAffected, nil
+}

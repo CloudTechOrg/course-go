@@ -9,7 +9,7 @@
 
 1. 下記のコマンドでフォルダーの移動を行う
 ```sh
-cd 03_api/3.2_RESTful_API/04_Show/cloudtech_forum
+cd 03_api/3.2_RESTful_API/05_Delete/cloudtech_forum
 ```
 
 2. Goのアプリケーションを実行し、HTTPサーバを起動する
@@ -22,25 +22,33 @@ $ go run main.go
 2025/04/15 10:21:05 APIサーバを起動しました。ポート: 8080
 ```
 
-## Updateの実行
-1. 以下のcurlコマンドで、Updateの処理を実行する
+## Deleteの実行
+1. 以下のcurlコマンドで、Deleteの処理を実行する
 ```sh
-curl -X PUT http://localhost:8080/posts/2 \
-  -H "Content-Type: application/json" \
-  -d '{"content": "Go言語を覚えてきました", "user_id": 1}'
+curl -X DELETE http://localhost:8080/posts/2
 ```
 
-2. 以下のように、更新が成功したメッセージが表示されることを確認
+2. 以下のように、削除が成功したメッセージが表示されることを確認
 ```sh
-{"message":"更新が成功しました","updateCount":1}
+{"deletedCount":1,"message":"削除が成功しました"}
 ```
 
-3. 以下のコマンドで、IDが2のレコードを検索する
+3. 以下のコマンドで、postsテーブルの一覧を表示する
 ```sh
-curl -X GET http://localhost:8080/posts/2
+curl -X GET http://localhost:8080/posts
 ```
 
-4. `content`と`updated_at`が更新されていることを確認
+4. `id` が`2`の投稿データが削除されていることを確認する
 ```sh
-{"id":2,"content":"Go言語を覚えてきました","user_id":1,"created_at":"2025-04-16T21:18:08Z","updated_at":"2025-04-16T23:05:04Z"}
+[{"id":1,"content":"AWSはじめました","user_id":1,"created_at":"2025-04-15T10:30:24Z","updated_at":"2025-04-15T10:30:24Z"},{"id":3,"content":"Terraformはじめました","user_id":1,"created_at":"2025-04-16T21:18:13Z","updated_at":"2025-04-16T21:18:13Z"}]
+```
+
+5. 以下のように、存在しない`id`を削除しようとしてみる
+```sh
+curl -X DELETE http://localhost:8080/posts/4
+```
+
+6. エラーメッセージが表示されることを確認する
+```sh
+削除対象のリソースが見つかりません
 ```
