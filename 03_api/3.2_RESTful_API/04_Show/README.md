@@ -30,7 +30,7 @@ curl -X GET http://localhost:8080/posts/2
 
 2. 以下のように、idが`2`のデータが表示されること
 ```sh
-{"id":2,"content":"Go言語はじめました","user_id":1,"created_at":"2025-04-16T21:18:08Z","updated_at":"0001-01-01T00:00:00Z"}
+{"id":2,"content":"Go言語はじめました","user_id":1,"created_at":"2025-04-16T21:18:08Z","updated_at":"2025-04-16T21:18:08Z"}
 ```
 
 ## Showの実行（データが存在しない場合）

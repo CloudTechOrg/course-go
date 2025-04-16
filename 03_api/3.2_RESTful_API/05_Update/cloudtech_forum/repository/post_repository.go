@@ -74,13 +74,13 @@ func SearchPost(id int) (model.Post, error) {
 	var post model.Post
 
 	// SQLを定義
-	query := "SELECT id, content, user_id, created_at FROM posts WHERE id = ?"
+	query := "SELECT id, content, user_id, created_at, updated_at FROM posts WHERE id = ?"
 
 	// SELECTのSQLを実行
 	row := db.QueryRow(query, id)
 
 	// 読み込んだデータを、postの各フィールドに格納
-	err := row.Scan(&post.ID, &post.Content, &post.UserID, &post.CreatedAt)
+	err := row.Scan(&post.ID, &post.Content, &post.UserID, &post.CreatedAt, &post.UpdatedAt)
 	if err != nil {
 		// エラーログの出力
 		log.Printf("投稿の詳細検索に失敗しました: %v", err)
@@ -89,4 +89,29 @@ func SearchPost(id int) (model.Post, error) {
 
 	// 読み込んだ投稿データを返却
 	return post, nil
+}
+
+// 投稿の更新
+func UpdatePost(id int, content string, createdUserID int) (int64, error) {
+	// SQLを定義
+	query := "UPDATE posts SET content = ?, user_id = ? WHERE id = ?"
+
+	// UPDATEのSQLを実行
+	result, err := db.Exec(query, content, createdUserID, id)
+	if err != nil {
+		// エラーログの出力
+		log.Printf("投稿の更新に失敗しました: %v", err)
+		return 0, fmt.Errorf("投稿の更新に失敗しました: %w", err)
+	}
+
+	// 影響を受けた行数を取得
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		// エラーログの出力
+		log.Printf("影響を受けた行数の取得に失敗しました: %v", err)
+		return 0, fmt.Errorf("影響を受けた行数の取得に失敗しました: %w", err)
+	}
+
+	// 影響を受けた行数を返す
+	return rowsAffected, nil
 }

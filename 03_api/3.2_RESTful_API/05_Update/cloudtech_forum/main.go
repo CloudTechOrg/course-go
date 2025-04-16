@@ -39,6 +39,7 @@ func main() {
 	r.HandleFunc("/posts", handler.Create).Methods("POST")
 	r.HandleFunc("/posts", handler.Index).Methods("GET")
 	r.HandleFunc("/posts/{id:[0-9]+}", handler.Show).Methods("GET")
+	r.HandleFunc("/posts/{id:[0-9]+}", handler.Update).Methods("PUT")
 
 	// APIサーバを起動
 	log.Println("APIサーバを起動しました。ポート: " + apiport)
