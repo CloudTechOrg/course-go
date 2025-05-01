@@ -71,3 +71,24 @@
     ```
 
 6. フロント側のindex.htmlを実行し、一覧にデータが表示されることを確認する
+
+7. 変更をGitHubに反映させる
+    ```shell
+    git add .
+    git commit -m "add cors"
+    git push origin main
+    ```
+
+## 2. CORSの変更をEC2インスタンスに反映
+1. APIサーバのEC2インスタンスにsshなどでログインする
+
+2. GitHubの変更内容をダウンロード（`git pull`）する
+    ```shell
+    cd /home/ec2-user/cloudtech-forum
+    git pull origin main
+    ```
+
+3. サービスを再起動して変更を反映
+    ```
+    sudo systemctl restart goserver.service
+    ```
