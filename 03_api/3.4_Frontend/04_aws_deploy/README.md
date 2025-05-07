@@ -15,7 +15,7 @@
 1. 左側のメニューから、`ルートテーブル`を選択
 2. 右上の`ルートテーブルの作成`をクリック
 3. 名前に、`web-routetable`を入力
-4. VPCに、my-vpcを選択
+4. VPCに、`my-vpc`を選択
 5. `ルートテーブルの作成`をクリック
 6. `ルートを編集`をクリック
 7. `ルートを追加`をクリック
@@ -23,7 +23,7 @@
 9. 左側のメニューから、`サブネット`を選択
 10. `web-subnet-01`のapi部分を選択
 11. ルートテーブルのタブをクリックし、`ルートテーブルの関連付けを編集`をクリック
-12. ルートテーブルIDを、`web-routetable`に変更します。
+12. ルートテーブルIDを、`web-routetable`に変更
 13. `保存`をクリック
 
 ## 3. EC2インスタンスを作成
@@ -76,7 +76,7 @@
     sudo vi /etc/nginx/nginx.conf
     ```
     - 変更前の設定：`root /usr/share/nginx/html;`
-    - 変更後の設定：`root /usr/share/nginx/html/cloudtech-forum-web;`
+    - 変更後の設定：`root /usr/share/nginx/html/cloudtech-forum-front;`
 
 8. 設定を変更した後、Nginxを再起動して変更を適用
     ```shell
