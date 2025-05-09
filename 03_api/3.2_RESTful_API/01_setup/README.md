@@ -58,7 +58,7 @@ CREATE TABLE cloudtech_forum.posts (
     vendor/
     ```
 
-## 4. GitHubの初回コミット
+## 4. GitHubの初期設定
 1. VS Codeのターミナルを開く
 2. 下記コマンドで、Gitの初期化を行う
     ```shell
