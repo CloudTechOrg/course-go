@@ -17,9 +17,9 @@
 
 ## 2. Goのモジュールの作成
 1. 以下のコマンドで、`cloudtech-forum`という名称のGoのモジュールを作る
-  ```
-  go mod init cloudtech-forum
-  ```
+    ```
+    go mod init cloudtech-forum
+    ```
 2. `go.mod`ファイルが作成されることを確認
 
 
