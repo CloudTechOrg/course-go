@@ -1,7 +1,7 @@
 # 前提事項
 - Goがインストールされていること
 - MySQLがインストールされていること
-- GitHubにある[https://github.com/CloudTechOrg/course-go](https://github.com/CloudTechOrg/course-go)の資材がローカルにダウンロードされていること
+- Gitがインストールされていること
 
 # ハンズオン手順
 ## 1. ブランチの作成
