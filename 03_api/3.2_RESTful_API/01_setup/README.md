@@ -76,7 +76,7 @@ CREATE TABLE cloudtech_forum.posts (
     ```shell
     git branch -m main
     ```
-6. リモートブランチとして、さきほどさくせいしたcloudtech_forumのリポジトリを指定
+6. リモートブランチとして、さきほど作成したcloudtech_forumのリポジトリを指定
     ```shell
     git remote add origin <your-github-repository-url>
     ```

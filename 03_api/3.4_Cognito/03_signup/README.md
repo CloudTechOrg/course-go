@@ -9,15 +9,28 @@
         mac.Write([]byte(username + clientID))
         return base64.StdEncoding.EncodeToString(mac.Sum(nil))
     }
+    ```
 
-    func SignupHandler(clientID string, clientSecret string, email string, password string) (*cognitoidentityprovider.SignUpOutput, error) {
+    ```go
+
+    // Cognitoに新規ユーザーを登録する関数
+    func Signup(
+        clientID string,
+        clientSecret string,
+        email string,
+        password string,
+    ) (*cognitoidentityprovider.SignUpOutput, error) {
+
+        // AWSセッションを作成
         sess := session.Must(session.NewSession(&aws.Config{
             Region: aws.String("ap-northeast-1"),
         }))
         svc := cognitoidentityprovider.New(sess)
 
+        // クライアントシークレットを用いてSecretHashを計算
         secretHash := calculateSecretHash(clientSecret, email, clientID)
 
+        // サインアップ用のリクエストを作成
         input := &cognitoidentityprovider.SignUpInput{
             ClientId:   aws.String(clientID),
             Username:   aws.String(email),
@@ -31,34 +44,42 @@
             },
         }
 
+        // Cognitoにサインアップリクエストを送信
         result, err := svc.SignUp(input)
         if err != nil {
             return nil, err
         }
+
+        // 結果を返却
         return result, nil
     }
+
     ```
 
 ## 2. ハンドラーの作成
 1. `handler/auth_handler.go`ファイルを作成する
 2. 以下のコードを記載する
     ```go
-    // Signupハンドラ関数
-    func Signup(w http.ResponseWriter, r *http.Request) {
+
+    func SignupHandler(w http.ResponseWriter, r *http.Request) {
+        // リクエストボディで受け取る項目を定義
         var req struct {
             Email    string `json:"email"`
             Password string `json:"password"`
             Name     string `json:"name"`
         }
 
+        // リクエストボディの情報を読み取る
         if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
             http.Error(w, "リクエストの形式が不正です", http.StatusBadRequest)
             return
         }
 
-        clientID := os.Getenv("COGNITO_CLIENT_ID")         // CognitoのクライアントID
-        clientSecret := os.Getenv("COGNITO_CLIENT_SECRET") // Cognitoのクライアントシークレット
+        // CognitoのクライアントIDとシークレットを環境変数から取得
+        clientID := os.Getenv("COGNITO_CLIENT_ID")
+        clientSecret := os.Getenv("COGNITO_CLIENT_SECRET")
 
+        // サインアップ処理を実行
         result, err := auth.Signup(clientID, clientSecret, req.Email, req.Password)
         if err != nil {
             log.Println("Signupエラー:", err)
@@ -66,16 +87,25 @@
             return
         }
 
+        // ユーザー作成に成功した場合は201 Createdを返す
         w.WriteHeader(http.StatusCreated)
-        json.NewEncoder(w).Encode(response)
+
+        // 成功メッセージを返す
+        json.NewEncoder(w).Encode(map[string]string{
+            "message": "ユーザー登録が完了しました",
+            "userSub": *result.UserSub, // Cognitoが返すユーザーIDを含める（任意）
+        })
     }
+
     ```
 
 ## 3. main.goの修正
 1. `main.go`ファイルを開く
 2. 下記内容を記載する
     ```go
+
     r.HandleFunc("/signup", handler.SignupHandler).Methods("POST")
+    
     ```
 
 
