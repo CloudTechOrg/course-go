@@ -37,7 +37,7 @@
 1. `handler/post_handler.go`ファイルを開き、下記内容を追記する
     ```go
     // Deleteハンドラ関数
-    func Delete(w http.ResponseWriter, r *http.Request) {
+    func DeleteHandler(w http.ResponseWriter, r *http.Request) {
         vars := mux.Vars(r)
         id, _ := strconv.Atoi(vars["id"])
 
@@ -131,8 +131,12 @@
     git push origin feature/add-posts
     ```
 
-
-
-
-
+## 7. mainブランチにマージ
+1. GitHubのリポジトリ画面を開く
+2. 上部の「Pull requests」タブをクリック
+3. 「New pull request」をクリック
+4. baseをmain、compareをfeature/add-postsに設定
+5. 差分を確認し、「Create pull request」をクリック
+6. 必要に応じてタイトルやコメントを記入し、もう一度「Create pull request」をクリック
+7. 問題なければ「Merge pull request」をクリックしてマージ完了
 

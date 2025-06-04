@@ -1,7 +1,6 @@
 # 前提事項
 - Goがインストールされていること
 - MySQLがインストールされていること
-- GitHubにある[https://github.com/CloudTechOrg/course-go](https://github.com/CloudTechOrg/course-go)の資材がローカルにダウンロードされていること
 
 # ハンズオン手順
 
@@ -58,7 +57,7 @@ CREATE TABLE cloudtech_forum.posts (
     vendor/
     ```
 
-## 4. GitHubの初期設定
+## 4. Gitの初期設定
 1. VS Codeのターミナルを開く
 2. 下記コマンドで、Gitの初期化を行う
     ```shell

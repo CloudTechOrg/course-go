@@ -35,7 +35,7 @@
 1. `handler/post_handler.go`ファイルを開き、下記内容を追記する
     ```go
     // Showハンドラ関数
-    func Show(w http.ResponseWriter, r *http.Request) {
+    func ShowHandler(w http.ResponseWriter, r *http.Request) {
         vars := mux.Vars(r)
         id, _ := strconv.Atoi(vars["id"])
 
@@ -62,7 +62,7 @@
     r := mux.NewRouter()
 	r.HandleFunc("/posts", handler.Create).Methods("POST")
 	r.HandleFunc("/posts", handler.Index).Methods("GET")
-	r.HandleFunc("/posts/{id:[0-9]+}", handler.Show).Methods("GET")// このコードを追加
+	r.HandleFunc("/posts/{id:[0-9]+}", handler.ShowHandler).Methods("GET")// このコードを追加
     ```
 
 ## 4. HTTPサーバの起動
