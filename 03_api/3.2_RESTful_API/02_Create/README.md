@@ -15,14 +15,6 @@
     git checkout -b feature/add-posts
     ```
 
-## 2. Goのモジュールの作成
-1. 以下のコマンドで、`cloudtech-forum`という名称のGoのモジュールを作る
-    ```
-    go mod init cloudtech-forum
-    ```
-2. `go.mod`ファイルが作成されることを確認
-
-
 ## 3. modelの作成
 1. `model`フォルダーを作成する
 2. その中に`post.go`ファイルを作成し、下記内容を記載する

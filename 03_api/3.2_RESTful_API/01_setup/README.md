@@ -57,6 +57,14 @@ CREATE TABLE cloudtech_forum.posts (
     vendor/
     ```
 
+## 4. モジュールの作成
+1. 以下のコマンドで、`cloudtech-forum`という名称のGoのモジュールを作る
+    ```
+    go mod init cloudtech-forum
+    ```
+2. `go.mod`ファイルが作成されることを確認
+
+
 ## 4. Gitの初期設定
 1. VS Codeのターミナルを開く
 2. 下記コマンドで、Gitの初期化を行う
