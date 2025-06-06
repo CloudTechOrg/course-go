@@ -78,12 +78,7 @@
 ## 3. main.goの作成
 1. `main.go`ファイルを開き、下記内容を追記する
     ```go
-    // ルーティングの設定
-    r := mux.NewRouter()
-    r.HandleFunc("/posts", handler.Create).Methods("POST")
-    r.HandleFunc("/posts", handler.Index).Methods("GET")
-    r.HandleFunc("/posts/{id:[0-9]+}", handler.Show).Methods("GET")
-    r.HandleFunc("/posts/{id:[0-9]+}", handler.UpdateHandler).Methods("PUT") // このコードを追加
+	  r.HandleFunc("/posts/{id:[0-9]+}", handler.UpdateHandler).Methods("PUT")
     ```
 
 ## 4. HTTPサーバの起動

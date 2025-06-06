@@ -43,8 +43,7 @@
         // 検索処理の実行
         post, err := repository.SearchPost(id)
         if err != nil {
-            log.SetFlags(log.LstdFlags | log.Lshortfile)
-            http.Error(w, err.Error(), http.StatusNotFound)
+            http.Error(w, "投稿データの検索に失敗しました", http.StatusInternalServerError)
             return
         }
 
@@ -59,11 +58,7 @@
 ## 3. main.goの作成
 1. `main.go`ファイルを開き、下記内容を追記する
     ```go
-    // ルーティングの設定
-    r := mux.NewRouter()
-	r.HandleFunc("/posts", handler.Create).Methods("POST")
-	r.HandleFunc("/posts", handler.Index).Methods("GET")
-	r.HandleFunc("/posts/{id:[0-9]+}", handler.ShowHandler).Methods("GET")// このコードを追加
+	r.HandleFunc("/posts/{id:[0-9]+}", handler.ShowHandler).Methods("GET")
     ```
 
 ## 4. HTTPサーバの起動

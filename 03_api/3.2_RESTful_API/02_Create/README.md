@@ -8,7 +8,7 @@
 ## 1. ブランチの作成
 1. 現時点のmainブランチを最新化する
     ```
-    git pull
+    git pull origin main
     ```
 
 2. 以下のコマンドで、Gitの新しいブランチを作成する
@@ -16,24 +16,25 @@
     git checkout -b feature/add-posts
     ```
 
-## 3. modelの作成
+## 2. modelの作成
 1. `model`フォルダーを作成する
 2. その中に`post.go`ファイルを作成し、下記内容を記載する
-      ```go
-      package model
+    ```go
+    package model
 
-      import "time"
+    import "time"
 
-      // Postsテーブルに対応する構造体
-      type Post struct {
-        ID        int       `json:"id"`         // ID
-        Content   string    `json:"content"`    // 投稿内容
-        UserID    int       `json:"user_id"`    // 投稿ユーザ
-        CreatedAt time.Time `json:"created_at"` // 作成日
-        UpdatedAt time.Time `json:"updated_at"` // 更新日
-      }
-      ```
-## 4. repositoryの作成
+    // Postsテーブルに対応する構造体
+    type Post struct {
+      ID        int       `json:"id"`         // ID
+      Content   string    `json:"content"`    // 投稿内容
+      UserID    int       `json:"user_id"`    // 投稿ユーザ
+      CreatedAt time.Time `json:"created_at"` // 作成日
+      UpdatedAt time.Time `json:"updated_at"` // 更新日
+    }
+
+    ```
+## 3. repositoryの作成
 1. `repository`フォルダーを作成する
 2. その中に`database.go`ファイルを作成し、下記内容を記載する
     ```go
@@ -74,45 +75,47 @@
         }
       }
     }
+
     ```
 3. さらに`post_repository.go`ファイルを作成し、下記内容を記載する
     ```go 
-      package repository
+    package repository
 
-      import (
-        "fmt"
-        "log"
+    import (
+      "cloudtech-forum/model"
+      "fmt"
+      "log"
 
-        _ "github.com/go-sql-driver/mysql"
-      )
+      _ "github.com/go-sql-driver/mysql"
+    )
 
-      // 投稿の新規登録
-      func CreatePost(content string, createdUserID int) (int, error) {
-        // SQLを定義
-        query := "INSERT INTO posts (content, user_id) VALUES (?, ?)"
+    // 投稿の新規登録
+    func CreatePost(content string, createdUserID int) (int, error) {
+      // SQLを定義
+      query := "INSERT INTO posts (content, user_id) VALUES (?, ?)"
 
-        // INSERTのSQLを実行
-        result, err := db.Exec(query, content, createdUserID)
-        if err != nil {
-          // エラーログの出力
-          log.Printf("投稿の新規登録に失敗しました: %v", err)
-          return 0, fmt.Errorf("投稿の新規登録に失敗しました: %w", err)
-        }
-
-        // 新規登録されたレコードのIDを取得
-        id, err := result.LastInsertId()
-        if err != nil {
-          // エラーログの出力
-          log.Printf("新規登録IDの取得に失敗しました: %v", err)
-          return 0, fmt.Errorf("新規登録IDの取得に失敗しました: %w", err)
-        }
-
-        // IDを返却
-        return int(id), nil
+      // INSERTのSQLを実行
+      result, err := db.Exec(query, content, createdUserID)
+      if err != nil {
+        // エラーログの出力
+        log.Printf("投稿の新規登録に失敗しました: %v", err)
+        return 0, fmt.Errorf("投稿の新規登録に失敗しました: %w", err)
       }
+
+      // 新規登録されたレコードのIDを取得
+      id, err := result.LastInsertId()
+      if err != nil {
+        // エラーログの出力
+        log.Printf("新規登録IDの取得に失敗しました: %v", err)
+        return 0, fmt.Errorf("新規登録IDの取得に失敗しました: %w", err)
+      }
+
+      // IDを返却
+      return int(id), nil
+    }
     ```
 
-## 5. handlerの作成
+## 4. handlerの作成
 1. `handler`フォルダーを作成する
 2. その中に`post_handler.go`ファイルを作成し、下記内容を記載する
     ```go
@@ -120,14 +123,18 @@
 
     import (
       "encoding/json"
+      "log"
       "net/http"
+      "strconv"
 
-      "cloudtech-forum/model"
+      model "cloudtech-forum/model"
       "cloudtech-forum/repository"
+
+      "github.com/gorilla/mux"
     )
 
     // Createハンドラ関数
-    func Create(w http.ResponseWriter, r *http.Request) {
+    func CreateHandler(w http.ResponseWriter, r *http.Request) {
       // リクエストのBodyデータを格納するオブジェクトを定義
       var post model.Post
 
@@ -155,7 +162,7 @@
       json.NewEncoder(w).Encode(response)
     }
     ```
-## 6. main.goの作成
+## 5. main.goの作成
 1. `main.go`ファイルを作成し、下記内容を記載する
     ```go
     package main
@@ -196,7 +203,7 @@
 
       // ルーティングの設定
       r := mux.NewRouter()
-      r.HandleFunc("/posts", handler.Create).Methods("POST")
+      r.HandleFunc("/posts", handler.CreateHandler).Methods("POST")
 
       // APIサーバを起動
       log.Println("APIサーバを起動しました。ポート: " + apiport)
@@ -206,14 +213,14 @@
     }
     ```
 
-## 7. packageのインストール
+## 6. packageのインストール
 1. 以下のコマンドで、必要なパッケージをインストールする
     ```go
     go mod tidy
     ```
 2. `go.sum`が作成されることを確認
 
-## 8. HTTPサーバの起動
+## 7. HTTPサーバの起動
 1. Goのアプリケーションを実行し、HTTPサーバを起動する
     ```sh
     go run main.go
@@ -262,7 +269,7 @@
 ## 10. APIサーバの停止
 1. 起動している`APIサーバをControl + C`ボタンで停止する
 
-## 10. GitHubへのPush
+## 11. GitHubへのPush
 1. 以下のコマンドで、変更をコミットし、GitHubにプッシュする
     ```sh
     git add .

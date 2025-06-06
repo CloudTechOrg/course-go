@@ -48,12 +48,11 @@
 1. `handler/post_handler.go`ファイルを開き、下記内容を追記する
     ```go
     // Indexハンドラ関数
-    func Index(w http.ResponseWriter, r *http.Request) {
+    func IndexHandler(w http.ResponseWriter, r *http.Request) {
       // 検索処理の実行
       posts, err := repository.SearchPostAll()
       if err != nil {
-        log.SetFlags(log.LstdFlags | log.Lshortfile)
-        log.Printf("Error: %v", err)
+        http.Error(w, "投稿データの検索に失敗しました", http.StatusInternalServerError)
         return
       }
 
@@ -68,10 +67,7 @@
 ## 3. main.goの作成
 1. `main.go`ファイルを開き、下記内容を追記する
     ```go
-    // ルーティングの設定
-    r := mux.NewRouter()
-    r.HandleFunc("/posts", handler.Create).Methods("POST")
-    r.HandleFunc("/posts", handler.Index).Methods("GET")  // このコードを追加
+  	r.HandleFunc("/posts", handler.IndexHandler).Methods("GET")
     ```
 
 ## 4. HTTPサーバの起動
@@ -86,7 +82,18 @@
     ```
 
 ## 5. 動作確認
-1. 以下のコマンドで、テスト用のデータを追加で2件登録する
+1. 以下のcurlコマンドで、Indexの処理を実行する
+    ```sh
+    curl -X GET http://localhost:8080/posts
+    ```
+
+2. 以下のように、1件のデータが表示されること
+    ```sh
+    $ curl -X GET http://localhost:8080/posts
+    [{"id":1,"content":"AWSはじめました","user_id":1,"created_at":"2025-04-15T10:30:24Z","updated_at":"2025-04-15T10:30:24Z"}]
+    ```
+
+3. 以下のコマンドで、テスト用のデータを追加で2件登録する
 
     ```sh
     curl -X POST http://localhost:8080/posts \
@@ -100,12 +107,12 @@
       -d '{"content": "Terraformはじめました", "user_id": 1}'
     ```
 
-2. 以下のcurlコマンドで、Indexの処理を実行する
+4. 以下のcurlコマンドで、Indexの処理を実行する
     ```sh
     curl -X GET http://localhost:8080/posts
     ```
 
-3. 以下のように、登録した3件のデータが表示されること
+5. 以下のように、登録した3件のデータが表示されること
     ```sh
     $ curl -X GET http://localhost:8080/posts
     [{"id":1,"content":"AWSはじめました","user_id":1,"created_at":"2025-04-15T10:30:24Z","updated_at":"2025-04-15T10:30:24Z"},{"id":2,"content":"Go言語はじめました","user_id":1,"created_at":"2025-04-16T21:18:08Z","updated_at":"2025-04-16T21:18:08Z"},{"id":3,"content":"Terraformはじめました","user_id":1,"created_at":"2025-04-16T21:18:13Z","updated_at":"2025-04-16T21:18:13Z"}]

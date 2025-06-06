@@ -70,13 +70,8 @@
 ## 3. main.goの作成
 1. `main.go`ファイルを開き、下記内容を追記する
     ```go
-    // ルーティングの設定
-    r := mux.NewRouter()
-    r.HandleFunc("/posts", handler.Create).Methods("POST")
-    r.HandleFunc("/posts", handler.Index).Methods("GET")
-    r.HandleFunc("/posts/{id:[0-9]+}", handler.Show).Methods("GET")
-    r.HandleFunc("/posts/{id:[0-9]+}", handler.Update).Methods("PUT")
-    r.HandleFunc("/posts/{id:[0-9]+}", handler.Delete).Methods("DELETE") // このコードを追加
+	r.HandleFunc("/posts/{id:[0-9]+}", handler.DeleteHandler).Methods("DELETE")
+
     ```
 
 ## 4. HTTPサーバの起動
@@ -134,10 +129,10 @@
 
 ## 7. mainブランチにマージ
 1. GitHubのリポジトリ画面を開く
-2. 上部の「Pull requests」タブをクリック
-3. 「New pull request」をクリック
-4. baseをmain、compareをfeature/add-postsに設定
-5. 差分を確認し、「Create pull request」をクリック
-6. 必要に応じてタイトルやコメントを記入し、もう一度「Create pull request」をクリック
-7. 問題なければ「Merge pull request」をクリックしてマージ完了
+2. 上部の`Pull requests`タブをクリック
+3. `New pull request`をクリック
+4. baseを`main`、compareを`feature/add-posts`に設定
+5. 差分を確認し、`Create pull request`をクリック
+6. 必要に応じてタイトルやコメントを記入し、もう一度`Create pull request`をクリック
+7. 問題なければ`Merge pull request`をクリックしてマージ完了
 
